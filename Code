@@ -1,0 +1,81 @@
+//In order for this program to run correctly, 3 command line arguments must be entered and must exist in the current directory
+
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DocumentMerger2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                Console.WriteLine("Document Merger");
+                Console.WriteLine("");
+                if (args.Length != 3)
+                {
+                    Console.WriteLine("DocumentMerger2 <input_file_1> <input_file_2> ... <input_file_n> <output_file>");
+                    Console.WriteLine("Supply a list of text files to merge followed by the name of the resulting merged text file as command line arguments.");
+                }
+                else
+                {
+                    string File1 = args[0];
+                    string File2 = args[1];
+                    string newFile = args[2];
+                    File1 = File1.Replace(".txt", "") + ".txt";
+                    File2 = File2.Replace(".txt", "") + ".txt";
+                    newFile = newFile.Replace(".txt", "") + ".txt";
+                    System.IO.FileInfo fi;
+                    fi = new System.IO.FileInfo(Environment.CurrentDirectory + "\\" + File1);
+                    if (!fi.Exists)
+                    {
+                        Console.WriteLine("File not found.  Try again.");
+                    }
+                    else
+                    {
+                        fi = null;
+                        fi = new System.IO.FileInfo(Environment.CurrentDirectory + "\\" + File2);
+                        if (!fi.Exists)
+                        {
+                            Console.WriteLine("File not found.  Try again.");
+                        }
+                        else
+                        {
+                            fi = null;
+                            //Pass the file path and file name to the StreamReader constructor
+                            try
+                            {
+                                StreamReader sr;
+                                StreamWriter sw = new StreamWriter(Environment.CurrentDirectory + "\\" + newFile);
+                                sr = new StreamReader(Environment.CurrentDirectory + "\\" + File1);
+                                sw.Write(sr.ReadToEnd());   //this copies all content of all the files into the new file
+                                sr.Close();
+                                sr = new StreamReader(Environment.CurrentDirectory + "\\" + File2);
+                                sw.Write(sr.ReadToEnd());   //this copies all content of all the files into the new file
+                                sr.Close();
+                                sw.Flush();
+                                sw.Close();
+                                System.IO.FileInfo count = new System.IO.FileInfo(newFile); //this allows us to easily find the number of characters in the new file
+                                Console.Write(newFile + " was successfully saved. The document contains ");
+                                Console.WriteLine(count.Length + " characters.");
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Exception[2]: " + e.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Exception[1]: " + e.ToString());
+            }
+        }
+    }
+}
